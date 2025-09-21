@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inspired Academy — Learning Today, Leading Tomorrow</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide icons -->
+  <script src="https://unpkg.com/lucide@0.259.0/dist/umd/lucide.min.js"></script>
+
+  <style>
+/* Background animation */
+.bg-hero-light {
+  background: linear-gradient(-45deg, #93c5fd, #fbcfe8, #fde68a, #a7f3d0);
+  background-size: 400% 400%;
+  animation: heroFlow 18s ease infinite;
+}
+.bg-hero-dark {
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #040248, #5b22be, #007e94);
+  background-size: 400% 400%;
+  animation: heroFlow 25s ease infinite;
+}
+@keyframes heroFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Gradient text animation */
+.gradient-text {
+  background: linear-gradient(90deg, #d1f8ff, #dfd2f6, #fcedd4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+    /* glowing CTA on hover */
+    .cta-glow:hover { box-shadow: 0 8px 30px rgba(124,58,237,0.28); transform: translateY(-3px); }
+
+    /* small fade-up reveal used on sections */
+    .reveal { opacity: 0; transform: translateY(12px); transition: all 500ms ease; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+
+    /* notices ticker */
+    .ticker { white-space: nowrap; overflow: hidden; }
+    .ticker p { display: inline-block; padding-left: 100%; animation: tickerAnim 14s linear infinite; }
+    @keyframes tickerAnim { 0% { transform: translateX(0);} 100% { transform: translateX(-100%);} }
+
+    /* small scrollbar style for sidebar */
+    #sidebar::-webkit-scrollbar { width: 8px; }
+    #sidebar::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.24); border-radius: 999px; }
+  </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 antialiased">
+  <!-- Header -->
+  <header id="topbar" class="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm bg-white/60 dark:bg-gray-900/60 border-b border-gray-200 dark:border-gray-800 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-6 py-3">
+      <!-- left: brand -->
+      <div class="flex items-center gap-3">
+        <img src="https://img.icons8.com/ios-filled/50/000000/graduation-cap.png" alt="logo" class="w-9 h-9"/>
+        <div>
+          <div class="font-extrabold text-lg leading-4">InspireEd Academy</div>
+          <div class="text-xs text-gray-600 dark:text-gray-300">Learning Today, Leading Tomorrow</div>
+        </div>
+      </div>
+
+      <!-- right: actions -->
+      <div class="flex items-center gap-3">
+        <!-- Theme toggle -->
+        <!-- Theme Toggle Button -->
+<!-- Theme toggle button -->
+<button id="themeToggle" aria-label="Toggle theme" 
+  class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition" 
+  title="Toggle theme">
+  <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" 
+    class="lucide" width="20" height="20" viewBox="0 0 24 24" 
+    fill="none" stroke="currentColor" stroke-width="2" 
+    stroke-linecap="round" stroke-linejoin="round">
+  </svg>
+</button>
+
+
+        <!-- Notification bell -->
+        <div class="relative">
+          <button id="notifBtn" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition" aria-haspopup="true" aria-expanded="false" title="Notifications">
+            <svg xmlns="http://www.w3.org/2000/svg" class="lucide" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h11z"></path><path d="M13.73 21a2 2 0 01-3.46 0"></path></svg>
+            <span id="notifBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] rounded-full px-1.5"></span>
+          </button>
+
+          <!-- Notification dropdown -->
+          <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden">
+            <div class="p-3 border-b border-gray-100 dark:border-gray-700 font-semibold">Notifications</div>
+            <ul class="max-h-60 overflow-auto">
+              <li class="p-3 hover:bg-gray-50 dark:hover:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+                <div class="text-sm font-medium">New: B.Pharm PYQ Collection</div>
+                <div class="text-xs text-gray-500">NA</div>
+              </li>
+              <li class="p-3 hover:bg-gray-50 dark:hover:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+                <div class="text-sm font-medium">Exam Date Update</div>
+                <div class="text-xs text-gray-500">NA</div>
+              </li>
+              <li class="p-3 hover:bg-gray-50 dark:hover:bg-gray-900">
+                <div class="text-sm font-medium">3rd sem DSA Notes</div>
+                <div class="text-xs text-gray-500">NA</div>
+              </li>
+            </ul>
+            <div class="p-2 text-center border-t border-gray-100 dark:border-gray-700">
+              <a href="#" class="text-sm text-blue-600">View all</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- mobile menu button -->
+        <button id="mobileMenuBtn" class="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition" aria-label="Open menu">
+          <svg xmlns="http://www.w3.org/2000/svg" class="lucide" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar (desktop + mobile slide-in) -->
+  <aside id="sidebar" class="fixed top-20 left-0 bottom-0 w-64 bg-white dark:bg-gray-800 border-r border-gray-100 dark:border-gray-800 px-3 py-4 overflow-y-auto transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40">
+    <nav class="space-y-1">
+      <!-- link helper -->
+      <a href="#"
+  class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-700">
+  <svg xmlns="http://www.w3.org/2000/svg" 
+       width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" 
+       stroke-linecap="round" stroke-linejoin="round" 
+       class="lucide">
+    <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+    <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+    <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+    <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+    <path d="M7.5 10.5v3"></path>
+    <path d="M16.5 10.5v3"></path>
+    <path d="M10.5 7.5h3"></path>
+    <path d="M10.5 16.5h3"></path>
+  </svg>
+  <span class="text-sm">Sitemap</span>
+</a>
+
+
+      <a href="#"
+  class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <svg xmlns="http://www.w3.org/2000/svg" 
+       width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" 
+       stroke-linecap="round" stroke-linejoin="round" 
+       class="lucide">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    <path d="M12 8a3 3 0 0 1 3 3c0 1.5-1 2-2 2"/>
+    <circle cx="12" cy="17" r="1"/>
+  </svg>
+  <span class="text-sm">Queries</span>
+</a>
+
+
+      <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- News & Updates -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <path d="M4 19h16V5H4z"></path>
+    <path d="M16 3v4"></path>
+    <path d="M8 3v4"></path>
+    <path d="M4 11h16"></path>
+  </svg>
+  <span class="text-sm">News & Updates</span>
+</a>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- Workspace -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+    <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+    <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+    <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+  </svg>
+  <span class="text-sm">Workspace</span>
+</a>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- GPA / CGPA Calculator -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+    <path d="M9 8h6"></path>
+    <path d="M9 12h6"></path>
+    <path d="M9 16h6"></path>
+  </svg>
+  <span class="text-sm">GPA / CGPA Calculator</span>
+</a>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- Pharma / Nursing Tools -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <path d="M21 6h-6l-7 12H3"></path>
+    <path d="M14 6h7"></path>
+  </svg>
+  <span class="text-sm">Pharma / Nursing Tools</span>
+</a>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- Notice Board -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <rect x="3" y="4" width="18" height="14" rx="2"></rect>
+    <path d="M3 10h18"></path>
+    <path d="M7 20h10"></path>
+  </svg>
+  <span class="text-sm">Notice Board</span>
+</a>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- Useful Links -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <path d="M10 13a5 5 0 0 0 7.07 0l2.12-2.12a5 5 0 0 0-7.07-7.07l-1.41 1.41"></path>
+    <path d="M14 11a5 5 0 0 0-7.07 0L4.8 13.12a5 5 0 0 0 7.07 7.07l1.41-1.41"></path>
+  </svg>
+  <span class="text-sm">Useful Links</span>
+</a>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- Search -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+  </svg>
+  <span class="text-sm">Search</span>
+</a>
+
+
+      <!-- expandable Tools menu -->
+<div>
+  <button id="toolsBtn" class="w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700" aria-expanded="false">
+    <!-- Tools Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         class="lucide">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M12 6v6l4 2"></path>
+    </svg>
+    <span class="text-sm">Tools</span>
+    <!-- Caret -->
+    <svg id="toolsCaret" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         class="ml-auto lucide">
+      <path d="M6 9l6 6 6-6"></path>
+    </svg>
+  </button>
+
+  <div id="toolsMenu" class="mt-1 ml-3 space-y-1 hidden">
+    <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">⚡ Study Timetable Generator</a>
+    <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">🧠 Flashcards</a>
+    <a href="#" class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">⏱️ Pomodoro Timer</a>
+  </div>
+</div>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- Theme -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <circle cx="12" cy="12" r="5"></circle>
+    <path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.36-7.36l-1.42 1.42M6.05 17.95l-1.42 1.42M17.95 17.95l1.42 1.42M6.05 6.05L4.63 4.63"></path>
+  </svg>
+  <span class="text-sm">Theme (Light / Dark)</span>
+</a>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- About Us -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <circle cx="12" cy="7" r="4"></circle>
+    <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+  </svg>
+  <span class="text-sm">About Us</span>
+</a>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- Contact Us -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <path d="M4 4h16v16H4z"></path>
+    <path d="M22 6 12 13 2 6"></path>
+  </svg>
+  <span class="text-sm">Contact Us</span>
+</a>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- Privacy Policy -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <path d="M12 2l8 4v6c0 5-3 9-8 10-5-1-8-5-8-10V6z"></path>
+  </svg>
+  <span class="text-sm">Privacy Policy</span>
+</a>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- Terms of Service -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <path d="M7 21h10"></path>
+    <path d="M7 4h10v17H7z"></path>
+    <path d="M9 8h6"></path>
+    <path d="M9 12h6"></path>
+  </svg>
+  <span class="text-sm">Terms of Service</span>
+</a>
+
+<a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+  <!-- Disclaimer -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="16" x2="12" y2="12"></line>
+    <line x1="12" y1="8" x2="12" y2="8"></line>
+  </svg>
+  <span class="text-sm">Disclaimer</span>
+</a>
+
+    </nav>
+
+    <div class="mt-6 px-3 text-xs text-gray-500 dark:text-gray-400">© 2025 Inspired Academy</div>
+  </aside>
+
+  <!-- mobile overlay -->
+  <div id="overlay" class="fixed inset-0 bg-black/40 hidden z-30"></div>
+
+  <!-- MAIN CONTENT -->
+  <main class="md:ml-64 p-6 pt-28 max-w-7xl mx-auto">
+    <!-- HERO -->
+   <section class="relative rounded-2xl overflow-hidden text-white p-10 shadow-lg reveal" data-reveal>
+  <!-- Animated background (auto changes in dark mode) -->
+  <div class="absolute inset-0 bg-hero-light dark:bg-hero-dark"></div>
+  <!-- Soft overlay to make text more readable -->
+  <div class="absolute inset-0 bg-black/20 dark:bg-black/40"></div>
+
+  <div class="relative flex flex-col md:flex-row items-center gap-6">
+    <div class="flex-1 text-center md:text-left">
+      <h1 class="text-4xl md:text-5xl font-extrabold gradient-text leading-tight flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             width="36" height="36" fill="none" stroke="currentColor" 
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+             class="lucide">
+          <path d="M2 10h20M4 10V6l8-4 8 4v4M4 10v10h4V10m4 0v10h4V10m4 0v10h4V10"/>
+        </svg>
+        <span>InspireEd Academy</span>
+      </h1>
+
+      <p class="mt-2 italic text-sm/relaxed text-white/90">
+        Learning Today, Leading Tomorrow
+      </p>
+      <p class="mt-4 max-w-2xl text-white/90">
+        Free platform for Polytechnic, B.Tech, and Medical (Pharma & Nursing) studies. 
+        Access notes, PYQs, practical files, and more — all free.
+      </p>
+
+      <div class="mt-6 flex flex-col sm:flex-row items-center gap-3">
+        <a href="#materials" class="inline-flex items-center gap-3 px-5 py-3 bg-white text-blue-600 rounded-full font-semibold shadow cta-glow hover:scale-[1.02] transition">
+          <span>🔎 Find Study Material</span>
+          <svg class="lucide" width="18" height="18" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
+        </a>
+
+        <!-- Socials -->
+        <div class="flex gap-3 mt-2 sm:mt-0">
+          <!-- Facebook -->
+          <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full 
+             bg-gray-200 dark:bg-gray-700 hover:bg-blue-600 hover:text-white 
+             dark:hover:bg-blue-500 transition transform hover:scale-110 shadow-sm">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.1 1.8.1v2h-1c-1 0-1.3.6-1.3 1.2V12h2.2l-.4 3h-1.8v7A10 10 0 0 0 22 12z"/>
+            </svg>
+          </a>
+          <!-- Twitter / X -->
+          <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full 
+             bg-gray-200 dark:bg-gray-700 hover:bg-sky-500 hover:text-white 
+             dark:hover:bg-sky-400 transition transform hover:scale-110 shadow-sm">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 
+                10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 
+                2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 
+                7.72 0 0 0 23 3z"/>
+            </svg>
+          </a>
+          <!-- YouTube -->
+          <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full 
+             bg-gray-200 dark:bg-gray-700 hover:bg-red-600 hover:text-white 
+             dark:hover:bg-red-500 transition transform hover:scale-110 shadow-sm">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19.615 3.184c.406.106.77.423.962.833.307.657.423 1.38.48 
+                2.119.11 1.394.11 2.788.11 4.183v.36c0 1.395 0 
+                2.789-.11 4.183-.057.739-.173 1.462-.48 
+                2.119-.192.41-.556.727-.962.833-.838.219-6.615.219-6.615.219s-5.777 
+                0-6.615-.219c-.406-.106-.77-.423-.962-.833-.307-.657-.423-1.38-.48-2.119C4 
+                13.467 4 12.073 4 10.678v-.36c0-1.395 0-2.789.11-4.183.057-.739.173-1.462.48-2.119.192-.41.556-.727.962-.833C6.39 
+                3 12.167 3 12.167 3s5.777 0 6.615.184zM10 8.5v5l4.5-2.5L10 8.5z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simple hero visual -->
+    <div class="w-full md:w-1/3">
+      <div class="rounded-xl bg-white/10 p-6">
+        <div class="h-40 bg-gradient-to-br from-white/5 to-white/20 rounded-lg flex items-center justify-center">
+          <div class="text-center">
+            <div class="text-sm text-white/80">Featured</div>
+            <div class="font-semibold text-lg mt-2">UNDER MAINTENANCE</div>
+            <div class="text-xs text-white/70 mt-1">STAY TUNED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- STUDY MATERIALS -->
+    <section id="materials" class="mt-8 reveal" data-reveal>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold flex items-center gap-3"><svg class="lucide" width="20" height="20"><path d="M3 7h18v14H3z"/></svg> Study Materials</h2>
+        <div class="text-sm text-gray-600 dark:text-gray-300">Free resources • Updated regularly</div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Tech -->
+        <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow hover:shadow-lg transition transform hover:-translate-y-1">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-900 flex items-center justify-center">
+              <svg class="lucide" width="22" height="22"><path d="M12 2l6 6-6 6-6-6 6-6z"/></svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg">📘 Tech Courses (Polytechnic & B.Tech)</h3>
+              <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Notes, PYQs, Assignments, Lab Manuals</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">Notes</span>
+                <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">PYQs</span>
+                <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">Labs</span>
+                <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">Assignments</span>
+              </div>
+            </div>
+            <div class="self-center">
+              <a href="#" class="text-sm text-blue-600 font-semibold">Explore →</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Medical -->
+        <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow hover:shadow-lg transition transform hover:-translate-y-1">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-lg bg-green-50 dark:bg-green-900 flex items-center justify-center">
+              <svg class="lucide" width="22" height="22"><path d="M12 2v20"/></svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-lg">💊 Medical Courses (B.Pharm, Nursing, GNM, ANM)</h3>
+              <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Notes, Previous Year Papers, Case Studies, Practical Files</p>
+              <div class="mt-3 flex flex-wrap gap-2">
+                <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">Notes</span>
+                <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">PYPs</span>
+                <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">Case Studies</span>
+                <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700">Practicals</span>
+              </div>
+            </div>
+            <div class="self-center">
+              <a href="#" class="text-sm text-blue-600 font-semibold">Explore →</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Notices & Resource Hub -->
+    <section class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6 reveal" data-reveal>
+      <!-- Notices -->
+      <div class="lg:col-span-2 space-y-4">
+        <div class="rounded-2xl bg-yellow-50 dark:bg-yellow-900 p-4 shadow">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <svg class="lucide" width="20" height="20"><path d="M3 10h18" /></svg>
+              <h4 class="font-semibold">📢 Notices</h4>
+            </div>
+            <a href="#" class="text-sm text-blue-600">View all</a>
+          </div>
+
+          <div class="mt-3 ticker text-sm text-gray-700 dark:text-gray-200">
+            <p>This Website is under maintainance.Please Stay Tuned.Thank You</p>
+          </div>
+        </div>
+
+        <div class="rounded-2xl bg-white dark:bg-gray-800 p-4 shadow">
+          <h4 class="font-semibold mb-2">Latest Uploads</h4>
+          <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+            <li>• Welcome.</li>
+            <li>• Inspire Academy.</li>
+            <li>• Learning Today,Leading Tomorrow.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Resource Hub -->
+      <aside class="space-y-4">
+        <div class="rounded-2xl bg-white dark:bg-gray-800 p-4 shadow">
+          <h4 class="font-semibold mb-3 flex items-center gap-2"><svg class="lucide" width="18" height="18"><path d="M3 7h18v14H3z" /></svg> Resource Hub</h4>
+          <div class="grid grid-cols-1 gap-3">
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-900">
+              <svg class="lucide" width="18" height="18"><path d="M10 20v-6" /></svg><span class="text-sm">Video Tutorials</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-900">
+              <svg class="lucide" width="18" height="18"><path d="M2 12h20" /></svg><span class="text-sm">E-books</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-900">
+              <svg class="lucide" width="18" height="18"><path d="M3 7h18v14H3z" /></svg><span class="text-sm">Online Tools</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+
+    tailwind.config = {
+    darkMode: 'class', // important!
+  }
+    // lucide icons
+    lucide.createIcons();
+
+    // helpers
+    const sidebar = document.getElementById('sidebar');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const overlay = document.getElementById('overlay');
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsMenu = document.getElementById('toolsMenu');
+    const toolsCaret = document.getElementById('toolsCaret');
+    const notifBtn = document.getElementById('notifBtn');
+    const notifDropdown = document.getElementById('notifDropdown');
+    const notifBadge = document.getElementById('notifBadge');
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+
+    // Mobile menu open/close
+    mobileMenuBtn?.addEventListener('click', () => {
+      sidebar.classList.remove('-translate-x-full');
+      overlay.classList.remove('hidden');
+      overlay.classList.add('block');
+    });
+
+    overlay?.addEventListener('click', () => {
+      sidebar.classList.add('-translate-x-full');
+      overlay.classList.remove('block');
+      overlay.classList.add('hidden');
+    });
+
+    // Tools accordion
+    toolsBtn?.addEventListener('click', () => {
+      const open = !toolsMenu.classList.contains('hidden');
+      if (open) {
+        toolsMenu.classList.add('hidden');
+        toolsBtn.setAttribute('aria-expanded','false');
+      } else {
+        toolsMenu.classList.remove('hidden');
+        toolsBtn.setAttribute('aria-expanded','true');
+      }
+      toolsCaret.classList.toggle('rotate-180');
+    });
+
+    // Notifications toggle
+    notifBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const opened = notifDropdown.classList.contains('hidden') === false;
+      if (opened) {
+        notifDropdown.classList.add('hidden');
+      } else {
+        notifDropdown.classList.remove('hidden');
+        notifBadge?.classList.add('hidden'); // clear badge on open
+      }
+    });
+
+    // close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!notifDropdown.contains(e.target) && !notifBtn.contains(e.target)) {
+        notifDropdown.classList.add('hidden');
+      }
+    });
+
+    // Theme toggle (remember preference)
+function applyTheme(isDark) {
+  if (isDark) {
+    document.documentElement.classList.add("dark");
+    themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>`; // moon
+  } else {
+    document.documentElement.classList.remove("dark");
+    themeIcon.innerHTML = `<circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/>
+      <line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`; // sun
+  }
+}
+
+// initialize theme
+const saved = localStorage.getItem("ia-theme");
+const prefersDark =
+  window.matchMedia &&
+  window.matchMedia("(prefers-color-scheme: dark)").matches;
+const initialDark = saved ? saved === "dark" : prefersDark;
+
+applyTheme(initialDark);
+
+themeToggle?.addEventListener("click", () => {
+  const isDark = document.documentElement.classList.toggle("dark");
+  localStorage.setItem("ia-theme", isDark ? "dark" : "light");
+  applyTheme(isDark);
+});
+
+
+    // reveal on scroll for elements with [data-reveal]
+    const reveals = document.querySelectorAll('[data-reveal]');
+    function onScrollReveal() {
+      reveals.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < (window.innerHeight - 80)) el.classList.add('show');
+      });
+    }
+    window.addEventListener('scroll', onScrollReveal, { passive: true });
+    onScrollReveal();
+  </script>
+</body>
+</html>
